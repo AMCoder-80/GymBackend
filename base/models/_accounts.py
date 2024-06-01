@@ -61,3 +61,24 @@ class User(AbstractBaseUser, PermissionsMixin):
     
     def __str__(self):
         return f"User Object: {self.id} - {self.get_full_name()}"
+
+
+class Profile(models.Model):
+    """ Store platform related data for each user """
+    # Numberical fields
+    age = models.PositiveIntegerField()
+    weight = models.FloatField()
+    heigth = models.FloatField()
+    BMI = models.FloatField()
+
+    # Image related fields
+    avatar = models.ImageField(upload_to='user_avatar/')
+
+    # Textual fields
+    description = models.TextField(blank=True, null=True)
+
+    # Relational fields
+    user = models.OneToOneField("base.User", on_delete=models.CASCADE, related_name="profile")
+
+    def __str__(self):
+        return f"Profile Object: {self.id} - {self.user.get_full_name()}"
