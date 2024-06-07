@@ -2,13 +2,15 @@
 
 # DRF related modules
 from rest_framework.decorators import api_view
-from rest_framework.generics import GenericAPIView
+from rest_framework.generics import GenericAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 
 # Local modules
-from base.accounts.serializers import UserCreationSerializer
-from base.models import User
+from base.accounts.serializers import (
+    UserCreationSerializer, ProfileCreationSerializer
+    )
+from base.models import User, Profile
 from base.utils.auth import generate_token_for_user
 
 
@@ -35,3 +37,9 @@ class UserCreationView(GenericAPIView):
         response = generate_token_for_user(user)
 
         return Response(response, status=status.HTTP_201_CREATED)
+    
+
+class ProfileCreationView(CreateAPIView):
+    """ Create a new profile object """
+    serializer_class = ProfileCreationSerializer
+    queryset = Profile
