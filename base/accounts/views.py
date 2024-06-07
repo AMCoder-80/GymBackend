@@ -9,6 +9,7 @@ from rest_framework import status
 # Local modules
 from base.accounts.serializers import UserCreationSerializer
 from base.models import User
+from base.utils.auth import generate_token_for_user
 
 
 # @api_view(['POST'])
@@ -30,5 +31,7 @@ class UserCreationView(GenericAPIView):
         serialized = self.get_serializer(data=request.data)
         serialized.is_valid(raise_exception=True)
         user = serialized.save()
-        print(user)
-        return Response(serialized.data, status=status.HTTP_201_CREATED)
+        
+        response = generate_token_for_user(user)
+
+        return Response(response, status=status.HTTP_201_CREATED)
