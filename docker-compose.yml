@@ -6,6 +6,8 @@ services:
         container_name: backend
         ports:
             - 8000:8000
+        env_file:
+            - ./envs/.env
         volumes:
             - ./:/app
         command: sh -c
@@ -13,3 +15,11 @@ services:
                 python manage.py migrate &&
                 python manage.py runserver 0.0.0.0:8000"
         restart: always
+    
+    redis:
+        image: redis
+        container_name: redis
+        restart: always
+        ports:
+            - 6379:6379
+        command: redis-server --save 60 1 --loglevel warning
