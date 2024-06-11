@@ -84,3 +84,35 @@ class LoginRequestSerializer(serializers.Serializer):
             )
         email_handler.send_otp(email, token)
         
+
+class VerifyTokenSerializer(serializers.Serializer):
+    """ Get token from user and validate it """
+    token = serializers.CharField()
+
+    def validate(self, attrs):
+        """ validate user token """
+        caching_handler = CachingProcedureHandler()
+        token = attrs['token']
+        email = caching_handler.get_key(Constant.LOGIN_TYPE_CACHING, token)
+        if email is None:
+            raise CustomException(
+                "invalid token",
+                "error",
+                status.HTTP_403_FORBIDDEN
+            )
+        attrs.update({
+            "email": email
+        })
+        return attrs
+    
+    def get_user(self):
+        email = self.validated_data['email']
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise CustomException(
+                "requested user does not exists",
+                "error",
+                status.HTTP_400_BAD_REQUEST
+            )
+        return user
