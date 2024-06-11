@@ -8,7 +8,8 @@ from rest_framework import status
 
 # Local modules
 from base.accounts.serializers import (
-    UserCreationSerializer, ProfileCreationSerializer
+    UserCreationSerializer, ProfileCreationSerializer,
+    LoginRequestSerializer
     )
 from base.models import User, Profile
 from base.utils.auth import generate_token_for_user
@@ -43,3 +44,14 @@ class ProfileCreationView(CreateAPIView):
     """ Create a new profile object """
     serializer_class = ProfileCreationSerializer
     queryset = Profile
+
+
+class LoginRequestView(GenericAPIView):
+    """ User sends request to get OTP code """
+    serializer_class = LoginRequestSerializer
+
+    def post(self, request, *args, **kwargs):
+        serialized = self.get_serializer(data=request.data)
+        serialized.is_valid(raise_exception=True)
+        serialized.send_token()
+        return Response("Email sent", status=status.HTTP_200_OK)
