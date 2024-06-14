@@ -9,7 +9,8 @@ from rest_framework import status
 # Local modules
 from base.accounts.serializers import (
     UserCreationSerializer, ProfileCreationSerializer,
-    LoginRequestSerializer, VerifyTokenSerializer
+    LoginRequestSerializer, VerifyTokenSerializer,
+    ProfileUpdateSerializer
     )
 from base.models import User, Profile
 from base.utils.auth import generate_token_for_user
@@ -74,5 +75,19 @@ class UpdateProfileView(GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         """ return profile object """
-        serialized = ProfileCreationSerializer(request.user.profile, context={'request': request})
+        serialized = self.get_serializer(request.user.profile, context={'request': request})
         return Response(serialized.data, status=status.HTTP_200_OK)
+    
+    def put(self, request, *args, **kwargs):
+        """ update profile object """
+        serialized = self.get_serializer(request.user.profile, data=request.data, partial=True,
+                                             context={"request": request})
+        serialized.is_valid(raise_exception=True)
+        serialized.save()
+        return Response(serialized.data, status=status.HTTP_200_OK)
+    
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ProfileCreationSerializer
+        elif self.request.method == "PUT":
+            return ProfileUpdateSerializer
