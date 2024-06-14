@@ -2,3 +2,4 @@ __pycache__/
 migrations/
 user_avatar/
 .env
+media/
