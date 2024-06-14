@@ -49,7 +49,7 @@ class Client(BaseModel):
     """ What clients say """
     # Textual fields
     name = models.CharField(max_length=100)
-    opninion = models.TextField()
+    opinion = models.TextField()
 
     # Image fields
     image = models.ImageField(upload_to="clients_avatar/")
