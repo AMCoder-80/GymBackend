@@ -43,9 +43,12 @@ INSTALLED_APPS = [
     "base.apps.BaseConfig",
     # Third party modules
     "rest_framework_simplejwt",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -156,3 +159,5 @@ CACHES = {
         }
     }
 }
+
+CORS_ALLOW_ALL_ORIGINS=True
