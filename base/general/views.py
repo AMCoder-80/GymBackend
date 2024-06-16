@@ -1,8 +1,9 @@
 from rest_framework.response import Response
-from rest_framework.generics import ListAPIView, ListCreateAPIView
+from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateAPIView
 from base.general.serializers import (
     WorkoutGifListSerializer, ClientListSerializer,
-    CreateExerciseSerializer, ExerciseListSerializer
+    CreateExerciseSerializer, ExerciseListSerializer,
+    ExerciseUpdateSerializer
     )
 from base.models import WorkoutGif, Client, Exercise
 
@@ -31,3 +32,10 @@ class ExerciseCreateListView(ListCreateAPIView):
         return Exercise.objects.filter(
             profile=self.request.user.profile
         )
+
+
+class ExerciseUpdateView(RetrieveUpdateAPIView):
+    """ Return and update a single exercise object """
+    serializer_class = ExerciseUpdateSerializer
+    queryset = Exercise.objects.all()
+    lookup_field = 'token'

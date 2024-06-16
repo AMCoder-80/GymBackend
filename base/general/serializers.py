@@ -49,3 +49,14 @@ class CreateExerciseSerializer(serializers.ModelSerializer):
             **validated_data
         )
         return obj
+    
+
+class ExerciseUpdateSerializer(serializers.ModelSerializer):
+    """ List all exercises """
+    type = serializers.SerializerMethodField(method_name="get_type")
+    class Meta:
+        model = Exercise
+        fields = ("id", "title", "repeatation", "token", "duration", "status", "type", "image")
+
+    def get_type(self, obj):
+        return obj.get_type_display()
