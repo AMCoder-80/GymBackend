@@ -1,11 +1,13 @@
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateAPIView
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from base.general.serializers import (
     WorkoutGifListSerializer, ClientListSerializer,
     CreateExerciseSerializer, ExerciseListSerializer,
     ExerciseUpdateSerializer
     )
 from base.models import WorkoutGif, Client, Exercise
+from base.utils.permissions import HasProfile
 
 
 class WorkoutGifListView(ListAPIView):
@@ -22,6 +24,8 @@ class ClientListSerializer(ListAPIView):
 
 class ExerciseCreateListView(ListCreateAPIView):
     """ List and create objects """
+    permission_classes = (HasProfile, )
+
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return CreateExerciseSerializer
@@ -38,4 +42,5 @@ class ExerciseUpdateView(RetrieveUpdateAPIView):
     """ Return and update a single exercise object """
     serializer_class = ExerciseUpdateSerializer
     queryset = Exercise.objects.all()
+    permission_classes = (HasProfile, )
     lookup_field = 'token'

@@ -14,6 +14,7 @@ from base.accounts.serializers import (
     )
 from base.models import User, Profile
 from base.utils.auth import generate_token_for_user
+from base.utils.permissions import HasProfile
 
 
 # @api_view(['POST'])
@@ -72,6 +73,7 @@ class VerifyTokenView(GenericAPIView):
 
 class UpdateProfileView(GenericAPIView):
     """ Get and update profile data """
+    permission_classes = (HasProfile, )
 
     def get(self, request, *args, **kwargs):
         """ return profile object """
